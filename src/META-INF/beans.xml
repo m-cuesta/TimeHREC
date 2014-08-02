@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="
+	                http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	                http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd	
+                        http://www.springframework.org/schema/tx 
+                        http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+                        http://www.springframework.org/schema/aop 
+                        http://www.springframework.org/schema/aop/spring-aop-2.0.xsd                        
+" >
+
+
+      <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
+         <property name="locations">  
+             <list>  
+                 <value>file:config.properties</value>  
+             </list>  
+         </property>  
+     </bean>  
+
+    <context:component-scan base-package="timesoft" />
+    
+    <!-- My data source -->
+    <bean id="dataSource" class="utilerias.timecore.DataSourceProvider" />
+
+    
+    <!-- Hibernate SessionFactory -->
+    <bean id="sessionFactory" class="utilerias.timecore.TimeHRSessionFactory"
+                    p:dataSource-ref="dataSource"  >
+          <property name="annotatedClasses">
+             <list>
+               <value>timesoft.model.Marcacion</value>
+               <value>timesoft.model.Empleado</value>
+               <value>timesoft.model.Intento</value>
+               <value>timesoft.model.Novedad</value>
+               <value>timesoft.model.NovedadPaquete</value>
+               <value>timesoft.model.SubdivisionCorreo</value>
+               <value>timesoft.model.SubdivisionCorreoPK</value>
+               <value>timesoft.model.Ciudad</value>
+               <value>timesoft.model.Maestro</value>
+               <value>timesoft.model.CentroCosto</value>
+               <value>timesoft.model.Usuario</value>
+               <value>timesoft.model.UsuarioPlanta</value>
+               <value>timesoft.model.UsuarioPlantaPK</value>
+             </list>
+           </property>
+            
+    </bean>
+        
+    
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager" />
+    
+
+    
+    
+</beans>
